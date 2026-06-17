@@ -1,6 +1,6 @@
 ## 🐝 Protótipo de topologia com XDP/eBPF orquestrado por Containerlab
 
-> Protótipo de **deteção de pacotes em um Gateway** usando **eBPF/XDP** em um ambiente de rede virtualizado com **Containerlab**.
+> Protótipo de **deteção de pacotes em um Gateway** usando **eBPF/XDP** em ambiente de rede virtualizado com **Containerlab**.
 
 [![Containerlab](https://img.shields.io/badge/Containerlab-v0.50+-blue?logo=linux)](https://containerlab.dev)
 [![Docker](https://img.shields.io/badge/Docker-required-blue?logo=docker)](https://www.docker.com)
@@ -13,25 +13,20 @@
 ---
 ## 📖 Visão Geral
 
-Este protótipo apresenta o desenvolvimento de uma Sonda de Monitoramento de Segurança para redes IoT, desenvolvida para a disciplina de Redes Programáveis do Mestrado em Computação Aplicada. O objetivo é a detecção e análise de tráfego anômalo (DDoS e Slow DoS) em tempo real, utilizando as tecnologias eBPF (extended Berkeley Packet Filter) e XDP (eXpress Data Path).
+"Este protótipo, inicialmente concebido como atividade prática da disciplina de Redes Programáveis do Mestrado em Computação Aplicada, evoluiu para uma proposta de pesquisa voltada à mitigação de ataques DDoS em dispositivos IoT. O sistema propõe uma Sonda de Monitoramento de Segurança de alto desempenho que utiliza eBPF e XDP para realizar a mitigação de ataques volumétricos (DDoS) com técnica de IP Spoofing. O objetivo é demonstrar que a filtragem em nível de driver, aliada ao processamento em line-rate, supera as limitações de escalabilidade dos firewalls tradicionais, consolidando-se como uma solução robusta para cenários de exaustão de recursos em Gateways IoT."
 
 ## O que este protótipo demonstra:
 
-- Observabilidade em Nível de Kernel: Implementação de um programa eBPF em C para inspeção de cabeçalhos e extração de metadados de tráfego em tempo real.
+- Mitigação em Nível de Driver: Implementação de um filtro XDP em C capaz de descartar tráfego malicioso (XDP_DROP) no estágio mais precoce possível da pilha de rede, antes da alocação de memória no kernel.
+- Eficiência Computacional: Processamento de tráfego em line-rate com uso mínimo de CPU, validando a superioridade da arquitetura eBPF em relação a firewalls tradicionais baseados em Netfilter (iptables).
+- Análise Comparativa de Desempenho: Orquestração de cenários de teste para avaliar a resiliência do Gateway sob condições de rede instáveis (latência/perda simuladas via tc qdisc).
+- Monitoramento Estatístico via eBPF Maps: Uso de mapas do tipo ARRAY para contagem determinística ($O(1)$) de pacotes e banda, garantindo escalabilidade e mínima latência de observabilidade.
+- Seletividade de Filtro: Implementação de regras baseadas em protocolos e portas (UDP/1883) para garantir a proteção contra ataques sem comprometer o tráfego MQTT legítimo.
 
-- Análise de Fluxo na Borda: capturar estatísticas de rede antes da alocação de buffers de socket (sk_buff), permitindo uma medição fiel da carga de ataque.
-- Orquestração de Cenário de Teste: 
-- Identificação de Vetores de Ataque:
-  - Monitoramento Volumétrico (DDoS): Detecção de inundações UDP/TCP através de contadores de taxa de pacotes por IP.
-  - Análise de Comportamento (Slow DoS): Rastreamento de estados de conexões MQTT para identificar tentativas de exaustão de recursos por     conexões persistentes e lentas.
-- Extração de Métricas via BPF Maps: Uso de mapas do tipo HASH e ARRAY para comunicar as estatísticas detectadas no kernel com o espaço de usuário, permitindo visualização e alertas.
 
-  Ajustes Técnicos no Protótipo:
-requisito "detecção", o fluxo de trabalho do laboratório será focado em:
+---
 
-## Ajustar drop foi inserido retirar do codigo?
-1. Ação XDP: O programa eBPF utilizará exclusivamente o retorno XDP_PASS. Isso garante que todos os pacotes (benignos ou maliciosos) continuem sua jornada para o Broker, mas não antes de serem contabilizados e analisados pela lógica de detecção.
-2. Métricas de Desempenho: o foco será o Overhead de Observabilidade. Monitorar 100% do tráfego sob ataque pesado sem degradar a CPU do Gateway. 
+Hipótese: "A mitigação de ataques DDoS baseada em XDP (Stateless) é superior à mitigação baseada em Netfilter (Stateful) em cenários de IP Spoofing, uma vez que a abordagem stateless mantém o desempenho constante ($O(1)$) independentemente da cardinalidade de IPs falsificados, enquanto a abordagem stateful sofre degradação exponencial devido à exaustão da tabela de estados do kernel."
 
 ---
 
@@ -71,7 +66,7 @@ requisito "detecção", o fluxo de trabalho do laboratório será focado em:
 | Nó     | Endereço IP  | Função                                      |
 |--------|-------------|---------------------------------------------|
 | atacante | `10.0.0.10`  | Emissor de pacotes - ilegítimo        |
-| sensor | `10.0.0.20`  | Sensor — emissor pacotes ICMP legítimo      |
+| sensor | `10.0.0.20`  | Sensor — emissor pacotes legítimo      |
 | gateway | `10.0.0.1`  | Filtro XDP - GATEWAY          |
 
 
