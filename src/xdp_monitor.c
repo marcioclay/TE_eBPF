@@ -23,7 +23,7 @@ struct {
     __uint(max_entries, 8192); 
     __type(key, __u32);        
     __type(value, __u64);      
-} ips_unicos_detectados SEC(".maps");
+} ips_detectados SEC(".maps");
 
 SEC("xdp")
 int programa_monitor_xdp(struct xdp_md *ctx) {
@@ -56,7 +56,7 @@ int programa_monitor_xdp(struct xdp_md *ctx) {
 
         // atualiza IP de origem 
         __u64 valor_dummy = 1;
-        bpf_map_update_elem(&ips_unicos_detectados, &ip_origem, &valor_dummy, BPF_NOEXIST);
+        bpf_map_update_elem(&ips_detectados, &ip_origem, &valor_dummy, BPF_NOEXIST);
 
         
         return XDP_DROP;
