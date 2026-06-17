@@ -5,7 +5,9 @@ import time
 import struct
 import sys
 
-MAP_PROTO = "proto_stats"
+# Nomes dos mapas conforme definidos no novo código C
+MAP_PROTO = "estatisticas_protocolo"
+MAP_IPS = "ips_unicos_detectados"
 
 def get_map_id(name):
     try:
@@ -28,18 +30,17 @@ def get_proto_metrics(map_id):
         return res
     except: return None
 
-# No seu dashboard.py
 def get_unique_ip_count():
-    map_id = get_map_id("unique_ips")
+    map_id = get_map_id(MAP_IPS)
     if not map_id: return 0
-    # O comando abaixo retorna a quantidade de itens no mapa de hash
-    out = subprocess.check_output(["bpftool", "map", "show", "id", str(map_id), "-j"])
-    data = json.loads(out)
-    return data.get("max_entries", 0) # Ou melhor, ler o dump e contar o tamanho da lista
+    try:
+        out = subprocess.check_output(["bpftool", "map", "dump", "id", str(map_id), "-j"], stderr=subprocess.DEVNULL)
+        data = json.loads(out)
+        return len(data) # Retorna a contagem de IPs distintos
+    except: return 0
 
 def tela_ddos(id_proto):
     print("\033c--- MONITORAMENTO EM TEMPO REAL: DDoS com IP Spoofing ---")
-    
     prev = get_proto_metrics(id_proto)
     time.sleep(1)
     
@@ -52,12 +53,13 @@ def tela_ddos(id_proto):
                 delta_bytes = curr[0]["bytes"] - prev[0]["bytes"]
                 
                 mbps = (delta_bytes * 8) / (1024 * 1024)
+                ips_unicos = get_unique_ip_count()
                 
                 print(f"\033c--- MONITORAMENTO DDoS (IP Spoofing) ---")
-                print(f"Taxa de Bloqueio (UDP): {delta_pkts:>10} PPS")
-                print(f"Banda Descartada      : {mbps:>10.2f} Mbps")
-                print(f"Tráfego Legítimo (TCP): {curr[1]['pkts']:>10} Pacotes acumulados")
-                print("\n[Nota]: O PPS reflete o bloqueio de tráfego spoofed em tempo real.")
+                print(f"Taxa de Bloqueio (UDP) : {delta_pkts:>10} PPS")
+                print(f"Banda Descartada       : {mbps:>10.2f} Mbps")
+                print(f"IPs Distintos (Spoofed): {ips_unicos:>10} IPs detectados")
+                print(f"Tráfego Legítimo (TCP) : {curr[1]['pkts']:>10} Pacotes acumulados")
                 print("\n(Pressione Ctrl+C para voltar ao menu)")
                 
                 prev = curr
@@ -68,7 +70,7 @@ def tela_ddos(id_proto):
 def main():
     id_proto = get_map_id(MAP_PROTO)
     if not id_proto:
-        print("Erro: Mapa proto_stats não encontrado.")
+        print("Erro: Mapa estatisticas_protocolo não encontrado.")
         sys.exit(1)
 
     while True:
