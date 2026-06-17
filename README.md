@@ -121,13 +121,6 @@ cd gateway-ebpf/ebpf-host/
 
 # B. Construa a imagem localmente
 sudo docker build -t ebpf-host:latest .
-```
-
-
-> 📁 Arquivos principais:
-> - `topologia.yml` — Definição da topologia Containerlab
-> - `xdp_monitor.c` — Código-fonte eBPF/XDP
-> - `compile.sh` — Script de compilação via Docker
 
 ---
 
@@ -271,20 +264,19 @@ sudo containerlab destroy -t topologia.yml
 ### 📂 Estrutura do Projeto 
 
 ```
-.
-├── clab-ebpf-mqtt
-│   ├── ansible-inventory.yml
-│   ├── authorized_keys
-│   ├── nornir-simple-inventory.yml
-│   └── topology-data.json
-├── compile.sh
-├── README.md
-├── src
-│   ├── sensor.py
-│   └── slow_attack.py
-├── topologia.yml
-├── xdp_monitor.c
-└── xdp_monitor.o
+TE_eBPF/
+├── topology.yaml       # Configuração do laboratório (Containerlab)
+├── src/
+│   └── xdp_monitor.c   # Código eBPF otimizado (DDoS + IP Spoofing)
+├── scripts/
+│   ├── compile.sh      # Compila o xdp_monitor.c
+│   ├── setup.sh        # Configura rede (tc qdisc)
+│   ├── load_xdp.sh     # Ativa o XDP no Gateway
+│   └── start_broker.sh # Inicia o Mosquitto (MQTT)
+├── dash/
+│   └── dashboard.py    # Dashboard com PPS e IPs Únicos
+└── metricas/
+    └── xdp_dos.md      # Roteiro de testes (Passo a passo)
 
 ```
 
