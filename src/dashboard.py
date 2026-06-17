@@ -28,6 +28,15 @@ def get_proto_metrics(map_id):
         return res
     except: return None
 
+# No seu dashboard.py
+def get_unique_ip_count():
+    map_id = get_map_id("unique_ips")
+    if not map_id: return 0
+    # O comando abaixo retorna a quantidade de itens no mapa de hash
+    out = subprocess.check_output(["bpftool", "map", "show", "id", str(map_id), "-j"])
+    data = json.loads(out)
+    return data.get("max_entries", 0) # Ou melhor, ler o dump e contar o tamanho da lista
+
 def tela_ddos(id_proto):
     print("\033c--- MONITORAMENTO EM TEMPO REAL: DDoS com IP Spoofing ---")
     
