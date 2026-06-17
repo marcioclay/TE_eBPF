@@ -5,9 +5,9 @@ import time
 import struct
 import sys
 
-# Nomes dos mapas conforme definidos no novo código C
+# mapas xdp_monitor.c
 MAP_PROTO = "estatisticas_protocolo"
-MAP_IPS = "ips_unicos_detectados"
+MAP_IPS = "ips_detectados"
 
 def get_map_id(name):
     try:
@@ -40,7 +40,7 @@ def get_unique_ip_count():
     except: return 0
 
 def tela_ddos(id_proto):
-    print("\033c--- MONITORAMENTO EM TEMPO REAL: DDoS com IP Spoofing ---")
+    print("\033c--- MONITORAMENTO EM TEMPO REAL: DDoS IP Spoofing ---")
     prev = get_proto_metrics(id_proto)
     time.sleep(1)
     
@@ -75,7 +75,7 @@ def main():
 
     while True:
         print("\033c" + "="*50)
-        print("   DASHBOARD DE DEFESA IoT (Dissertação)")
+        print("   DASHBOARD DE DEFESA IoT ")
         print("="*50)
         print(" 1. Iniciar Monitoramento de Ataque (PPS)")
         print(" 2. Sair")
