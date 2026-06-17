@@ -1,0 +1,62 @@
+name: lab-ebpf
+
+topology:
+  nodes:
+    
+    switch:
+      kind: linux
+      image: nicolaka/netshoot:latest
+      exec:
+        - ip link add br0 type bridge
+        - ip link set br0 up
+        - sh -c 'sleep 2 && ip link set eth1 master br0 && ip link set eth1 up'
+        - sh -c 'sleep 2 && ip link set eth2 master br0 && ip link set eth2 up'
+        - sh -c 'sleep 2 && ip link set eth3 master br0 && ip link set eth3 up'
+
+    # --- GATEWAY ---
+    gateway:
+      kind: linux
+      image: ebpf-host:latest  
+      binds:
+        - /lib/modules:/lib/modules:ro
+        - /usr/src:/usr/src:ro
+        - /etc/os-release:/etc/os-release:ro
+        - /boot:/boot:ro
+        - /sys/fs/bpf:/sys/fs/bpf:shared
+        - ./:/lab/             
+      exec:
+        - ip addr add 10.0.0.1/24 dev eth1
+        - ip link set eth1 up
+      
+          
+
+    # --- ATACANTE  ---
+    atacante:
+      kind: linux
+      image: ubuntu:22.04
+      binds:
+        - ./src:/src           
+      exec:
+        - apt-get update
+        - apt-get install -y iproute2 iputils-ping hping3
+        - ip addr add 10.0.0.10/24 dev eth1
+        - ip link set eth1 up
+        
+
+    # --- SENSOR  ---
+    sensor:
+      kind: linux
+      image: ubuntu:22.04
+      binds:
+        - ./src:/src           
+      exec:
+        - apt-get update
+        - apt-get install -y iproute2  iputils-ping
+        - ip addr add 10.0.0.20/24 dev eth1
+        - ip link set eth1 up
+        
+
+  links:
+    - endpoints: ["gateway:eth1", "switch:eth1"]
+    - endpoints: ["atacante:eth1", "switch:eth2"]
+    - endpoints: ["sensor:eth1", "switch:eth3"]
