@@ -13,20 +13,19 @@
 ---
 ## 📖 Visão Geral
 
-"Este protótipo, inicialmente concebido como atividade prática da disciplina de Redes Programáveis do Mestrado em Computação Aplicada, evoluiu para uma proposta de pesquisa voltada à mitigação de ataques DDoS em dispositivos IoT. O sistema propõe uma Sonda de Monitoramento de Segurança de alto desempenho que utiliza eBPF e XDP para realizar a mitigação de ataques volumétricos (DDoS) com técnica de IP Spoofing. O objetivo é demonstrar que a filtragem em nível de driver, aliada ao processamento em line-rate, supera as limitações de escalabilidade dos firewalls tradicionais, consolidando-se como uma solução robusta para cenários de exaustão de recursos em Gateways IoT."
+"Protótipo desenvolvido como atividade prática da disciplina de Redes Programáveis do Mestrado em Computação Aplicada, voltada à mitigação de ataques DDoS em gateways IoT. O sistema propõe uma Sonda de Monitoramento que utiliza eBPF e XDP para realizar a mitigação de ataques volumétricos (DDoS) com técnica de IP Spoofing."
 
 ## O que este protótipo demonstra:
 
-- Mitigação em Nível de Driver: Implementação de um filtro XDP em C capaz de descartar tráfego malicioso (XDP_DROP) no estágio mais precoce possível da pilha de rede, antes da alocação de memória no kernel.
-- Eficiência Computacional: Processamento de tráfego em line-rate com uso mínimo de CPU, validando a superioridade da arquitetura eBPF em relação a firewalls tradicionais baseados em Netfilter (iptables).
+- Mitigação em Nível de Driver.
+- Eficiência Computacional: Processamento de tráfego com uso mínimo de CPU, validando a arquitetura eBPF em relação a firewalls(iptables).
 - Análise Comparativa de Desempenho: Orquestração de cenários de teste para avaliar a resiliência do Gateway sob condições de rede instáveis (latência/perda simuladas via tc qdisc).
-- Monitoramento Estatístico via eBPF Maps: Uso de mapas do tipo ARRAY para contagem determinística ($O(1)$) de pacotes e banda, garantindo escalabilidade e mínima latência de observabilidade.
+- Monitoramento Estatístico via eBPF Maps: Uso de mapas do tipo ARRAY para contagem de pacotes e banda e mínima latência de observabilidade.
 - Seletividade de Filtro: Implementação de regras baseadas em protocolos e portas (UDP/1883) para garantir a proteção contra ataques sem comprometer o tráfego MQTT legítimo.
-
 
 ---
 
-Hipótese: "A mitigação de ataques DDoS baseada em XDP (Stateless) é superior à mitigação baseada em Netfilter (Stateful) em cenários de IP Spoofing, uma vez que a abordagem stateless mantém o desempenho constante ($O(1)$) independentemente da cardinalidade de IPs falsificados, enquanto a abordagem stateful sofre degradação exponencial devido à exaustão da tabela de estados do kernel."
+"A mitigação de ataques DDoS baseada em XDP é superior à mitigação baseada em iptables em cenários de IP Spoofing, uma vez que mantém o desempenho constante independentemente da cardinalidade de IPs falsificados, enquanto a abordagem tradiconal, iptables sofre degradação devido à exaustão da tabela de estados do kernel."
 
 ---
 
@@ -69,6 +68,14 @@ Hipótese: "A mitigação de ataques DDoS baseada em XDP (Stateless) é superior
 | sensor | `10.0.0.20`  | Sensor — emissor pacotes legítimo      |
 | gateway | `10.0.0.1`  | Filtro XDP - GATEWAY          |
 
+
+A topologia do laboratório foi desenhada para representar um ambiente de Gateway IoT em cenário de borda, estruturada em uma topologia tipo "estrela" controlada por um elemento central.
+
+A rede é composta por três componentes principais:
+
+- Gateway: alvo da defesa, onde reside o filtro eBPF/XDP. Configurado para interceptar todo o tráfego que transita entre a rede.
+- Sensor: Simula o dispositivo IoT legítimo que realiza a telemetria, utilizando um perfil de rede com latência e perda (via tc qdisc) para emular condições reais de conexão Wi-Fi.
+- Atacante: gerador de tráfego anômalo - técnica de IP Spoofing (--rand-source) para simular uma botnet distribuída.
 
 ---
 
