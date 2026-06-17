@@ -118,7 +118,7 @@ containerlab version
 Clone o repositório e acesse o diretório do laboratório:
 
 ```bash
-git clone https://github.com/marcioclay/gateway-ebpf.git
+https://github.com/marcioclay/TE_eBPF.git
 
 ```
 Instalação de imagem ubuntu com ebpf
@@ -128,7 +128,7 @@ cd gateway-ebpf/ebpf-host/
 
 # B. Construa a imagem localmente
 sudo docker build -t ebpf-host:latest .
-
+```
 ---
 
 ### 4. Instalar na raiz - para iniciar o MQTT
@@ -220,42 +220,21 @@ docker exec clab-gateway-ebpf-sensor ping -c 3 10.0.0.1
 
 8.1 Carregar e pinar o programa XDP
 
-#### Remover pin anterior (se existir) para evitar erros
-
 ```
-sudo docker exec -it clab-lab-ebpf-gateway rm -f /sys/fs/bpf/xdp_monitor_test
+chmod +x scripts/load_xdp.sh
+./scripts/load_xdp.sh xdp
 ```
-
-#### Carregar e pinar o programa no filesystem BPF
-
-```
-sudo docker exec -it clab-lab-ebpf-gateway bpftool prog load /lab/xdp_monitor.o /sys/fs/bpf/xdp_monitor_test type xdp
-```
-
-#### Anexar à interface eth1
-
-```
-sudo docker exec -it clab-lab-ebpf-gateway ip link set dev eth1 xdpgeneric pinned /sys/fs/bpf/xdp_monitor_test
-```
-
-Por que pinar? Pinar o programa em /sys/fs/bpf/ mantém o BPF Map ativo na memória, permitindo ler o contador de drops mesmo após o comando de carregamento encerrar.
-
 --- 
 
 📊 Mapas - atalho
 
-Como o programa foi pinado, o bpftool cria um "atalho" para os seus mapas dentro do diretório /sys/fs/bpf/. Para ver as estatísticas dos ataques em tempo real:
+```
+# Para ver as estatísticas de tráfego (UDP vs TCP):
+sudo docker exec -it clab-lab-ebpf-gateway bpftool map dump name estatisticas_protocolo
 
+# Para ver a quantidade de IPs únicos (spoofed) bloqueados:
+sudo docker exec -it clab-lab-ebpf-gateway bpftool map dump name ips_detectados
 ```
-# Para ver a volumetria global (DDoS e total da porta 1883):
-sudo docker exec -it clab-lab-ebpf-gateway bpftool map dump name proto_stats
-```
-
-```
-# Para ver a análise comportamental por IP (Slow DoS):
-sudo docker exec -it clab-lab-ebpf-gateway bpftool map dump name tcp_sessions
-```
-
 
 
 ### 🧹 Limpeza
