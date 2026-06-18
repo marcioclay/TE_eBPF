@@ -185,7 +185,7 @@ Isso irá:
 Verifique se o lab está rodando:
 
 ```bash
-docker ps --filter "label=containerlab=gateway-ebpf"
+docker ps --filter "label=containerlab=TE-eBPF"
 ```
 ```
 docker ps --format "table {{.Names}}\t{{.Status}}" | grep clab
@@ -199,7 +199,7 @@ docker ps --format "table {{.Names}}\t{{.Status}}" | grep clab
 Antes de ativar o filtro XDP, confirme que os nós se comunicam normalmente:
 
 ```bash
-docker exec clab-gateway-ebpf-sensor ping -c 3 10.0.0.1
+docker exec clab-lab-ebpf-sensor ping -c 3 10.0.0.1
 ```
 
 **Resultado esperado:** `0% packet loss`  
@@ -212,8 +212,8 @@ docker exec clab-gateway-ebpf-sensor ping -c 3 10.0.0.1
 - instala MQTT
 
   ```
-  chmod +x setup.sh
-  ./setup.sh
+  chmod +x ./scripts/setup.sh
+  ./scripts/setup.sh
   ```
 
 ### 8. Ativar o Filtro XDP
