@@ -131,17 +131,7 @@ sudo docker build -t ebpf-host:latest .
 ```
 ---
 
-### 4. Instalar na raiz - para iniciar o MQTT
-
-```
-cat <<EOF > mosquitto.conf
-listener 1883 0.0.0.0
-allow_anonymous true
-EOF
-```
-
-
-### 5. Compilar o Programa eBPF
+### 4. Compilar o Programa eBPF
 
 O script `compile.sh` usa um **container nicolaka/netshoot como ambiente de build**, dispensando a instalação de ferramentas de compilação no host.Isso evita que você precise instalar localmente todas as dependências de eBPF (que podem ser pesadas ou conflitar) diretamente no seu sistema host.
 
@@ -170,7 +160,7 @@ Success! xdp_monitor.o created. 😱😱😱
 
 ---
 
-### 6. Deploy da Topologia
+### 5. Deploy da Topologia
 
 ```bash
 sudo containerlab deploy -t topologia.yml --reconfigure
