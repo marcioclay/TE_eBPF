@@ -148,8 +148,8 @@ O script `compile.sh` usa um **container nicolaka/netshoot como ambiente de buil
 ```bash
 # Se não estiver no diretório do lab:
 # cd script
-chmod +x compile.sh
-./compile.sh
+chmod +x ./scripts/compile.sh
+./scripts/compile.sh
 ```
 
 <details>
@@ -212,8 +212,8 @@ docker exec clab-lab-ebpf-sensor ping -c 3 10.0.0.1
 - instala MQTT
 
   ```
-  chmod +x ./setup.sh
-  ./setup.sh
+  chmod +x ./scripts/setup.sh
+  ./scripts/setup.sh
   ```
 
 ### 8. Ativar o Filtro XDP
@@ -222,7 +222,7 @@ docker exec clab-lab-ebpf-sensor ping -c 3 10.0.0.1
 
 ```
 chmod +x scripts/load_xdp.sh
-./load_xdp.sh xdp
+./scripts/load_xdp.sh xdp
 ```
 --- 
 
