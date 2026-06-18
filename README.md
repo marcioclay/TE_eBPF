@@ -212,8 +212,8 @@ docker exec clab-lab-ebpf-sensor ping -c 3 10.0.0.1
 - instala MQTT
 
   ```
-  chmod +x ./scripts/setup.sh
-  ./scripts/setup.sh
+  chmod +x ./setup.sh
+  ./setup.sh
   ```
 
 ### 8. Ativar o Filtro XDP
@@ -222,18 +222,21 @@ docker exec clab-lab-ebpf-sensor ping -c 3 10.0.0.1
 
 ```
 chmod +x scripts/load_xdp.sh
-./scripts/load_xdp.sh xdp
+./load_xdp.sh xdp
 ```
 --- 
 
 📊 Mapas - atalho
 
 ```
+# Listar os mapas
+sudo docker exec -it clab-lab-ebpf-gateway bpftool map show
+
 # Para ver as estatísticas de tráfego (UDP vs TCP):
-sudo docker exec -it clab-lab-ebpf-gateway bpftool map dump name estatisticas_protocolo
+sudo docker exec -it clab-lab-ebpf-gateway bpftool map dump id 11
 
 # Para ver a quantidade de IPs únicos (spoofed) bloqueados:
-sudo docker exec -it clab-lab-ebpf-gateway bpftool map dump name ips_detectados
+sudo docker exec -it clab-lab-ebpf-gateway bpftool map dump id 12
 ```
 
 
