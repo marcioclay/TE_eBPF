@@ -18,6 +18,10 @@ Benchmark Comparativo
 
 - Cenário C (Proposta - XDP): Rode ./load_xdp.sh xdp. Lance o ataque, verifique o PPS no Dashboard e a CPU%.
 
+### Em todos os cenário inicie o dashboard
+```
+sudo python3 dashboard.py
+```
 
 --- 
 ## Cenário A (Baseline - Sem Proteção)
