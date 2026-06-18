@@ -14,7 +14,7 @@ echo "=================================================="
 for node in clab-lab-ebpf-atacante clab-lab-ebpf-sensor; do
     docker exec $node apt-get update
     docker exec $node apt-get install -y python3 python3-pip iproute2
-    docker exec $node pip3 install paho-mqtt
+    
 done
 
 echo "=================================================="
