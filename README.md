@@ -118,13 +118,13 @@ containerlab version
 Clone o repositório e acesse o diretório do laboratório:
 
 ```bash
-https://github.com/marcioclay/TE_eBPF.git
-
+git clone https://github.com/marcioclay/TE_eBPF.git
+cd TE_eBPF
 ```
 Instalação de imagem ubuntu com ebpf
 ```
 # A. Entre na pasta ebpf-host dentro do seu repositório local
-cd gateway-ebpf/ebpf-host/
+cd ebpf-host/
 
 # B. Construa a imagem localmente
 sudo docker build -t ebpf-host:latest .
@@ -147,7 +147,7 @@ O script `compile.sh` usa um **container nicolaka/netshoot como ambiente de buil
 
 ```bash
 # Se não estiver no diretório do lab:
-# cd ~/redes/gateway-ebpf
+# cd src
 chmod +x compile.sh
 ./compile.sh
 ```
