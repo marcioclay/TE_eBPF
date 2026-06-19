@@ -76,7 +76,7 @@ Nesta etapa, avaliou-se o volume do ataque injetado na interface do Gateway e o 
 Achados do Tráfego e Hardware: A análise comprova a ineficiência de firewalls tradicionais sob ataques volumétricos. O Iptables, ao operar em camadas superiores do Kernel, mantém a CPU à beira da exaustão (88.0%) apenas para descartar pacotes. Em contraste, o eBPF/XDP implementou com sucesso o conceito de degradação graciosa: ao descartar antecipadamente o ataque no driver da placa de rede, reduziu o estresse do processador para 29.7%, mesmo submetido a uma carga maliciosa quase duas vezes maior.
 
 
-2. Análise de Qualidade de Serviço (QoS) e Disponibilidade
+### 3.2. Análise de Qualidade de Serviço (QoS) e Disponibilidade
 Esta etapa mede o impacto da mitigação do ponto de vista do dispositivo IoT (Sensor Legítimo), focando na viabilidade de manter comunicações de missão crítica (tempo real) ativas durante o ataque.
 
 | Métrica de QoS | Cenário 1: Sem Defesa | Cenário 2: Iptables | Cenário 3: eBPF/XDP |
