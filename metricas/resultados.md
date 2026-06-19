@@ -7,8 +7,7 @@ Este documento detalha a metodologia, a caracterização de rede e a análise do
 
 ## 1. Caracterização e Diferenciação de Tráfego legítimo e anômalo
 
-Um tráfego legítimo de um sensor IoT para um gateway se caracteriza por baixo volume de pacotes, o endereço ip é conhecido dentro da topologia,
-percebe-se que não há esgotamento de processamento de hardware, os dados do payload são organizados e estruturados. Nisto difere de um ataque DDoS com simulação de spoofing, pois gera alta taxa de pacotes na interface de rede, ips aleatórios enviando pacotes e saturação de carga na CPU.
+Um tráfego legítimo de um sensor IoT para um gateway se caracteriza por baixo volume de pacotes, endereço ip é conhecido e os dados do payload são organizados e estruturados. Nisto difere de um ataque DDoS com simulação de spoofing, pois gera alta taxa de pacotes na interface de rede e ips aleatórios enviando pacotes.
 
 | **Aspecto**       | **Tráfego legítimo (sensor → gateway IoT)** | **Ataque ( DDoS)** |
 |--------------------|---------------------------------------------|-------------------------|
