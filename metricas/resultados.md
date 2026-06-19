@@ -18,7 +18,25 @@ percebe-se que não há esgotamento de processamento de hardware, os dados do pa
 | **Payload**        | Dados estruturados (JSON, valores numéricos)| Conteúdo aleatório ou vazio |
 
 
-INSERIR TCDUMP
+Abaixo imagem de captura de trafego legitimo e anomalo, usando tcdump e wireshark. As imagens foram obtidas com ping sensor -> gateway e hping3 gerando trafego UDP atacante -> gateway.
+
+```
+# comados para simular trafego legitimo e anomalo
+docker exec clab-gateway-ebpf-sensor ping -c 100 10.0.0.1
+sudo docker exec -it clab-lab-ebpf-atacante hping3 --flood --rand-source --udp -d 120 -p 1883 10.0.0.1
+```
+```
+# comandos tcdump gerando arquivo .pcap
+sudo docker exec clab-lab-ebpf-gateway tcpdump -i eth1 icmp -n -c 100 -w - > legitimo.pcap
+sudo docker exec clab-lab-ebpf-gateway tcpdump -i eth1 udp and dst port 1883 -n -c 5000 -w - > ataque.pcap
+```
+
+<img width="752" height="192" alt="image" src="https://github.com/user-attachments/assets/85d90bf5-e2bd-4157-86c9-caf4c3eaa533" />
+
+
+<img width="453" height="178" alt="image" src="https://github.com/user-attachments/assets/d0fca62d-90a2-47a1-b17d-8539f9acefe1" />
+
+
 ---
 
 ## 2. Metodologia e Cenários de Teste
