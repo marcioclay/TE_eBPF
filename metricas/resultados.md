@@ -37,13 +37,10 @@ Observação:
 * Coluna Time: tráfego legítimo - cadência ritimada / tráfego anômalo - dezenas, centenas pacotes com a mesma marca
 * Coluna lenght: tráfego legítimo - tamanho fixo / tráfego anômalo - udp porta 1883
 
-#### Tráfego anômalo
-<img width="605" height="197" alt="image" src="https://github.com/user-attachments/assets/35ab45f4-2061-472e-8bd2-9e81d6454475" /> 
+#### Tráfego anômalo e legítimo
+A primeira parte simula tráfego legítmo a segunda com borda vermelha tráfego anômalo.
 
-
-#### Tráfego legítimo
-<img width="818" height="196" alt="image" src="https://github.com/user-attachments/assets/610e2087-6473-4082-ba4d-84bd5b43d064" />
-
+<img width="579" height="338" alt="image" src="https://github.com/user-attachments/assets/95478197-4b49-4c49-8de8-88b1874de72c" />
 
 ---
 
