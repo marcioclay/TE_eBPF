@@ -41,7 +41,7 @@ Monitora o impacto dos ataques no hardware (SoftIRQ - CPU).
 htop
 ```
 
-# Observe as barras de CPU, devido o ataque haverá alteração(barras vermelhas/verde-escuras).
+### Observe as barras de CPU, devido o ataque haverá alteração(barras vermelhas/verde-escuras).
 
 ### Terminal 3: Controle de Defesas e Ataque
 
