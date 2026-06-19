@@ -17,22 +17,22 @@ Um tráfego legítimo de um sensor IoT para um gateway se caracteriza por baixo 
 | **Payload**        | Dados estruturados (JSON, valores numéricos)| Conteúdo aleatório ou vazio |
 
 
-Abaixo imagem de captura de trafego legitimo e anomalo, usando tcdump e wireshark. As imagens foram obtidas com ping sensor -> gateway e hping3 gerando trafego UDP atacante -> gateway.
+Abaixo imagem de captura de trafego legitimo e anomalo, usando tcdump e wireshark. As imagens foram obtidas através de simulação de tráfego sensor -> gateway e atacante -> gateway.
 
 ```
 # comados para simular trafego legitimo e anomalo
-docker exec clab-gateway-ebpf-sensor ping -c 100 10.0.0.1
+sudo docker exec clab-lab-ebpf-sensor hping3 -S -c 10 -i 1 -p 1883 10.0.0.1
 sudo docker exec -it clab-lab-ebpf-atacante hping3 --flood --rand-source --udp -d 120 -p 1883 10.0.0.1
 ```
 ```
 # comandos tcdump gerando arquivo .pcap
-sudo docker exec clab-lab-ebpf-gateway tcpdump -i eth1 icmp -n -c 100 -w - > legitimo.pcap
-sudo docker exec clab-lab-ebpf-gateway tcpdump -i eth1 udp and dst port 1883 -n -c 5000 -w - > ataque.pcap
+sudo docker exec clab-lab-ebpf-gateway tcpdump -i eth1 port 1883 -n -c 200 -w - > comparativo.pcap
 ```
+
 Observação: 
 
 * Coluna source: tráfego legítimo - ip único / tráfego anômalo - múltiplos ips
-* Coluna protocol: tráfego legítimo - icmp / tráfego anômalo - udp porta 1883
+* Coluna protocol: tráfego legítimo - tcp / tráfego anômalo - udp porta 1883
 * Coluna Time: tráfego legítimo - cadência ritimada / tráfego anômalo - dezenas, centenas pacotes com a mesma marca
 * Coluna lenght: tráfego legítimo - tamanho fixo / tráfego anômalo - udp porta 1883
 
