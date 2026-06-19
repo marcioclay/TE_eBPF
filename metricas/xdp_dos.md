@@ -10,23 +10,33 @@
 
 Este guia orienta a validação do protótipo através do estabelecimento de tráfego legítimo, simulação de ataque de inundação e extração de metricas diretamente do plano de dados.
 
-Benchmark Comparativo
+Comparativo 
 
-- Cenário A (Baseline - Sem Proteção) ataque com ./load_xdp.sh sem argumentos. Anote o uso de CPU (top ou htop no gateway).
+- Cenário A (Baseline - Simulação de ataque sem proteção) 
 
-- Cenário B (Netfilter): Rode ./load_xdp.sh iptables. Lance o ataque, verifique o PPS no Dashboard e a CPU%.
+- Cenário B (Simulação de ataque com iptables).
 
-- Cenário C (Proposta - XDP): Rode ./load_xdp.sh xdp. Lance o ataque, verifique o PPS no Dashboard e a CPU%.
+- Cenário C (Simulação de ataque com XDP).
 
-### Em todos os cenário inicie o dashboard
+## Preparação do ambiente
+
+1. Em todos os cenário inicie o dashboard
+   O dashboard colherá dados dos mapas xdp e iptables
 ```
+# medir a mitigação, RTT e pacotes perdidos
 sudo python3 dashboard.py
 ```
+2. Enquanto o dashboard estiver em execução será realizado ping automático sensor > gateway (não é necessário nenhuma ação)
 
+3. Em todos os cenários executar o htop - fará leitura de dados do hardware, cpu, memoria e outros.
+```
+htop
+```
+   
 --- 
 ## Cenário A (Baseline - Sem Proteção)
 
-0. Desativar o xdp para não detectar ou mitigar:
+1. Desativar o xdp para não detectar ou mitigar:
 
 ```
 # Dentro da pasta do projeto TE_eBPF
@@ -34,27 +44,27 @@ sudo python3 dashboard.py
 ./scripts/load_xdp.sh
 ```
 
-1. Monitorar a carga de CPU no Gateway
+2. Monitorar a carga de CPU  
 
 ```
-sudo docker exec -it clab-lab-ebpf-gateway top
+# inicie um terminal A
+htop
 ```
 
-2. Lançar ataque - DDoS com spoofing
+3. Dashboard de observação
+```
+# medir a mitigação, RTT e pacotes perdidos
+sudo python3 dashboard.py
+```
+
+4. Lançar ataque - DDoS com spoofing
 
 ```
 # Executar ataque no contêiner 'atacante'
 sudo docker exec -it clab-lab-ebpf-atacante hping3 --flood --rand-source --udp -d 120 -p 1883 10.0.0.1
 ```
 
-3. Observação
-
-   - CPU Load (%Cpu(s))
-   - Processos: O processo ksoftirqd
-   - Estabilidade: Note se o terminal do Gateway fica lento ou se o ping a partir de outros nós começa a falhar (latência alta).
-  ver: si e top
-Exemplo de nota: "Sem mitigação, o Gateway atingiu 98% de carga de SoftIRQ, impossibilitando a entrega de mensagens legítimas do sensor."
---- 
+---
 
 ## Mitigação com Iptables 
 
@@ -67,28 +77,25 @@ Script de carga com o parâmetro iptables. Isso fará com que o Gateway aplique 
 ./scripts/load_xdp.sh iptables
 ```
 
-2. Monitorar a CPU
+2. Monitorar a carga de CPU  
 
 ```
-sudo docker exec -it clab-lab-ebpf-gateway top
+# inicie um terminal A
+htop
 ```
 
-3. Ataque(mesmo metodo) atacante > gateway
+3. Dashboard de observação
+```
+# medir a mitigação, RTT e pacotes perdidos
+sudo python3 dashboard.py
+```
+
+4. Lançar ataque - DDoS com spoofing
 
 ```
+# Executar ataque no contêiner 'atacante'
 sudo docker exec -it clab-lab-ebpf-atacante hping3 --flood --rand-source --udp -d 120 -p 1883 10.0.0.1
 ```
-4. Observação
-
-   CPU Load: Você notará que o valor de si (SoftIRQ) provavelmente ainda estará elevado, mas talvez um pouco menor que no Cenário A. A grande diferença é que o iptables introduz uma latência de processamento maior para cada pacote que ele avalia nas suas tabelas de regras.
-
-Dashboard: No seu dashboard.py (caso esteja rodando), compare os valores.
-
-Comportamento do Kernel: O iptables opera na camada stateful (ou stateless dependendo da regra), mas ele precisa "trazer" o pacote para dentro da pilha TCP/IP do kernel, o que consome mais ciclos de processamento do que a solução XDP que testaremos a seguir.
-
-Anotação para sua dissertação:
-
-Exemplo de nota: "Com a mitigação via iptables, o Gateway apresentou uma redução marginal na carga de CPU, mantendo-se, contudo, próximo ao ponto de saturação devido ao overhead de processamento de pacotes na pilha de rede do Kernel."
 
 --- 
 
@@ -100,28 +107,27 @@ Exemplo de nota: "Com a mitigação via iptables, o Gateway apresentou uma redu�
 ./scripts/load_xdp.sh xdp
 ```
 
-2. Monitorar CPU
+2. Monitorar a carga de CPU  
 
 ```
-sudo docker exec -it clab-lab-ebpf-gateway top
+# inicie um terminal A
+htop
 ```
 
-3. Ataque com uso do xdp
+3. Dashboard de observação
+```
+# medir a mitigação, RTT e pacotes perdidos
+sudo python3 dashboard.py
+```
+
+4. Lançar ataque - DDoS com spoofing
 
 ```
+# Executar ataque no contêiner 'atacante'
 sudo docker exec -it clab-lab-ebpf-atacante hping3 --flood --rand-source --udp -d 120 -p 1883 10.0.0.1
 ```
 
-O que observar no Cenário C (Resultados Esperados):
-CPU Load: Você verá que o valor de si (SoftIRQ) será significativamente menor do que nos cenários A e B. Em muitos casos, o sistema mal "sente" o ataque, pois o XDP descarta os pacotes antes mesmo de eles ocuparem recursos do kernel.
-
-Dashboard: No seu dashboard.py, observe o campo "IPs Distintos" subir rapidamente. Isso prova que o seu sistema está a filtrar um ataque distribuído (spoofed) em tempo real com precisão.
-
-Performance Legítima: Enquanto o ataque ocorre, tente rodar um comando simples de rede (como um ping do sensor para o gateway). Ele deve continuar a responder quase normalmente, provando que o seu filtro é "cirúrgico" e não impacta o tráfego legítimo.
-
 ---
 
-Tire os prints (ou anote os valores de si do top e o PPS do Dashboard) para cada um dos 3 cenários.
-
-Insira esses valores na sua tabela de resultados do xdp_dos.md.
+### Analise dos testes estão no diretório resultados.md
 
