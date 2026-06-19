@@ -137,7 +137,7 @@ O script `compile.sh` usa um **container nicolaka/netshoot como ambiente de buil
 
 ```bash
 # Se não estiver no diretório do lab:
-# cd script
+
 chmod +x ./scripts/compile.sh
 ./scripts/compile.sh
 ```
