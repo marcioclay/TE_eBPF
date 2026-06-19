@@ -30,11 +30,19 @@ sudo docker exec -it clab-lab-ebpf-atacante hping3 --flood --rand-source --udp -
 sudo docker exec clab-lab-ebpf-gateway tcpdump -i eth1 icmp -n -c 100 -w - > legitimo.pcap
 sudo docker exec clab-lab-ebpf-gateway tcpdump -i eth1 udp and dst port 1883 -n -c 5000 -w - > ataque.pcap
 ```
+Observação: 
 
-<img width="752" height="192" alt="image" src="https://github.com/user-attachments/assets/85d90bf5-e2bd-4157-86c9-caf4c3eaa533" />
+* Coluna source: tráfego legítimo - ip único / tráfego anômalo - múltiplos ips
+* Coluna protocol: tráfego legítimo - icmp / tráfego anômalo - udp porta 1883
+* Coluna Time: tráfego legítimo - cadência ritimada / tráfego anômalo - dezenas, centenas pacotes com a mesma marca
+* Coluna lenght: tráfego legítimo - tamanho fixo / tráfego anômalo - udp porta 1883
+
+#### Tráfego anômalo
+<img width="605" height="197" alt="image" src="https://github.com/user-attachments/assets/35ab45f4-2061-472e-8bd2-9e81d6454475" /> 
 
 
-<img width="453" height="178" alt="image" src="https://github.com/user-attachments/assets/d0fca62d-90a2-47a1-b17d-8539f9acefe1" />
+#### Tráfego legítimo
+<img width="818" height="196" alt="image" src="https://github.com/user-attachments/assets/610e2087-6473-4082-ba4d-84bd5b43d064" />
 
 
 ---
