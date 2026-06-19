@@ -45,7 +45,7 @@ A primeira parte simula tráfego legítmo a segunda com borda vermelha tráfego 
 
 ## 2. Metodologia e Cenários de Teste
 
-A bateria de testes foi executada sob um ataque volumétrico constante de aproximadamente **[INSERIR PPS DO ATAQUE, ex: 400.000] PPS**, gerado pela ferramenta `hping3`. Foram avaliados três cenários distintos:
+A bateria de testes foi executada sob um ataque volumétrico constante de aproximadamente **464000 PPS**, gerado pela ferramenta `hping3`. Foram avaliados três cenários distintos:
 
 1.  **Cenário 1: Sem Defesa (Baseline de Caos):** Gateway exposto ao ataque volumétrico sem qualquer mecanismo de filtragem ativo.
 2.  **Cenário 2: Mitigação L3/L4 Tradicional (Iptables):** Regra de *DROP* aplicada no Netfilter (`iptables -A INPUT -p udp --dport 1883 -j DROP`).
@@ -55,18 +55,29 @@ A bateria de testes foi executada sob um ataque volumétrico constante de aproxi
 
 ## 3. Resultados e Métricas de Avaliação
 
-A eficácia de cada cenário foi medida em tempo real através de um painel de monitoramento customizado em Python e ferramentas de análise de hardware (`mpstat`/`htop`).
+A eficácia de cada cenário foi medida em tempo real através de um painel de monitoramento customizado em Python e ferramenta de análise de hardware `htop`.
 
 ### 3.1. Quadro Resumo dos Resultados
 
+| Métrica Avaliada              | Sem Defesa | Iptables  |  eBPF/XDP     |
+| :--- | :---: | :---: | :---: |
+| **Tráfego Recebido (PPS)**    | ~ 243.000  | ~ 263.000 | **~ 471.000** |
+| **Taxa de Mitigação (%)**     | 0.00%      | 84.08%    | **~ 100.00%** * |
+| **Status do Sensor (QoS)**    | ONLINE (Com perdas) | ONLINE (Instável) | **ONLINE (Estável)** |
+| **Perda de Pacotes Legítimos**| 1.8%       | 0.0%      | **0.0%**      |
+| **Latência Média (RTT)**      | 30.00 ms   | 51.40 ms  | **31.50 ms**  |
+| **Jitter (Variação de Atraso)**| 97.00 ms  | 831.60 ms | **66.80 ms**  |
+
 | Métrica Avaliada | Cenário 1: Sem Defesa | Cenário 2: Iptables | Cenário 3: eBPF/XDP |
 | :--- | :---: | :---: | :---: |
-| **Tráfego Recebido (PPS)** | ~ [000.000] | ~ [000.000] | ~ [000.000] |
+| **Tráfego Recebido (PPS)** | ~ [464.000] | ~ [000.000] | ~ [000.000] |
 | **Taxa de Mitigação (%)** | 0.00% | [XX.X]% | **[XX.X]%** |
 | **Status do Sensor (QoS)** | OFFLINE | Instável | **ONLINE** |
 | **Perda de Pacotes Legítimos**| 100% | [XX]% | **[0.0]%** |
 | **Latência Média (RTT)** | Timeout | [XX.X] ms | **[X.X] ms** |
 | **Jitter (Variação de Atraso)**| N/A | [XX.X] ms | **[X.X] ms** |
+
+**Status do Sensor (QoS)** - o status OFFLINE, é intermitente, necessitando observação temporal para sua visualização.
 
 ### 3.2. Análise da Taxa de Mitigação e Tráfego
 *(Nota: O eBPF/XDP foi capaz de interceptar os pacotes maliciosos na sua totalidade. No cenário Iptables, observou-se [INSERIR OBSERVAÇÃO, ex: que a fila do kernel encheu antes que o firewall pudesse processar todos os pacotes, resultando em menor taxa de mitigação efetiva]).*
