@@ -62,12 +62,14 @@ Nesta etapa, avaliou-se o volume do ataque injetado na interface do Gateway e o 
 
  Quadro Resumo dos Resultados
 
-| Métrica Avaliada | Cenário 1: Sem Defesa | Cenário 2: Iptables | Cenário 3: eBPF/XDP |
+ | Métrica Avaliada | Cenário 1: Sem Defesa | Cenário 2: Iptables | Cenário 3: eBPF/XDP |
 | :--- | :---: | :---: | :---: |
-| **Tráfego Recebido (PPS)** | ~ 243.000 | ~ 263.000 | **~ 471.000** |
-| **Pacotes Bloqueados (PPS)**| 0 | 221.386 | **~ 471.000** * |
-| **Taxa de Mitigação** | 0.00% | 84.08% | **~ 100.00%** * |
-| **Uso da CPU (Núcleo Afetado)**| 100.0% | 88.0% | **29.7%** |
+| **Tráfego Recebido (PPS)** | ~ 306.679 | ~ 397.727 | ~ 730.258 |
+| **Pacotes Bloqueados (PPS)**| 0 | ~ 345.479 | ~ 859.922 * |
+| **Taxa de Mitigação** | 0.00% | 86.86% | 100.00% |
+| **Uso da CPU (Núcleo Afetado)**| 100.0% | 95.2% | 43.1% |
+
+ |
 
 **Status do Sensor (QoS)** - o status OFFLINE, é intermitente, necessitando observação temporal para sua visualização.
 
@@ -81,10 +83,10 @@ Esta etapa mede o impacto da mitigação do ponto de vista do dispositivo IoT (S
 
 | Métrica de QoS | Cenário 1: Sem Defesa | Cenário 2: Iptables | Cenário 3: eBPF/XDP |
 | :--- | :---: | :---: | :---: |
-| **Disponibilidade (Status)** | ONLINE (Perdas) | ONLINE (Instável) | **ONLINE (Estável)** |
-| **Perda de Pacotes Legítimos**| 1.8% | 0.0% | **0.0%** |
-| **Latência Média (RTT)** | 30.00 ms | 51.40 ms | **31.50 ms** |
-| **Jitter (Variação de Atraso)**| 97.00 ms | 831.60 ms | **66.80 ms** |
+| **Disponibilidade (Status)** | ONLINE | ONLINE | ONLINE |
+| **Perda de Pacotes Legítimos**| 0.9% | 2.2% | 0.0% |
+| **Latência Média (RTT)** | 899.00 ms | 67.80 ms | 26.20 ms |
+| **Jitter (Variação de Atraso)**| 764.00 ms | 40.10 ms | 5.90 ms |
 
 
 Achados de Qualidade de Serviço:
