@@ -12,6 +12,26 @@
 
 Este guia orienta o passo a passo para a validação do protótipo. O experimento consiste em estabelecer um tráfego legítimo (baseline de QoS), simular um ataque volumétrico de inundação (DDoS UDP Flood com IP Spoofing) e extrair métricas de mitigação e consumo de hardware em três cenários distintos.
 
+### Métricas avaliadas 
+
+As métricas em análise no laboratório dividem-se em duas categorias principais, focando tanto no desempenho do plano de dados do gateway quanto no impacto direto na comunicação do sensor IoT:
+
+1. Métricas de Tráfego e Consumo de Hardware (Plano de Dados)
+
+- Tráfego Recebido (PPS - Pacotes por Segundo)
+- Pacotes Bloqueados (PPS)
+- Taxa de Mitigação (%)
+- Uso da CPU (Núcleo Afetado): 
+
+2. Métricas de Qualidade de Serviço (QoS) e Disponibilidade
+
+- Disponibilidade (Status)
+- Perda de Pacotes Legítimos (%)
+- Latência Média (RTT - Round-Trip Time)
+- Jitter (Variação de Atraso)
+
+
+---
 ## 🧮 Cenários de Avaliação
 * **Cenário A (Baseline):** Simulação de ataque sem qualquer proteção ativa.
 * **Cenário B (Iptables):** Simulação de ataque com mitigação tradicional via regras de firewall (Netfilter).
