@@ -39,11 +39,13 @@ Observação:
 #### Tráfego anômalo e legítimo
 A primeira parte simula tráfego legítmo a segunda com borda vermelha tráfego anômalo.
 
-<img width="579" height="338" alt="image" src="https://github.com/user-attachments/assets/95478197-4b49-4c49-8de8-88b1874de72c" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/95478197-4b49-4c49-8de8-88b1874de72c" width="450" height="300" />
+  <br>
+  <em>Figura 1: Tráfego legítimo x anômalo</em>
+</p>
 
-| ![Imagem 1](https://github.com/user-attachments/assets/95478197-4b49-4c49-8de8-88b1874de72c) |
-|:--:|
-| Figura 1: Tráfego legítimo x anômalo |
+
 ---
 
 ## 2. Metodologia e Cenários de Teste
@@ -102,11 +104,11 @@ As figuras apresentam os resultados dos testes do protótipo de mitigação DDoS
 
 | ![Imagem 1](https://github.com/user-attachments/assets/74cb21d8-f754-437f-868f-df7ec245b27d) | ![Imagem 2](https://github.com/user-attachments/assets/43330cb6-9592-47c0-97c8-645eaa2f1e49) |
 |:--:|:--:|
-| Figura 1: Análise tráfego xdp | Figura 2: QoS xdp |
+| Figura 2: Análise tráfego xdp | Figura 3: QoS xdp |
 
 | ![Imagem 3](https://github.com/user-attachments/assets/d6534712-4226-472c-8e32-1bb86e0cbd0b) | ![Imagem 4](https://github.com/user-attachments/assets/de87b5c3-5cd2-45a8-9dd6-b509067eafd9) |
 |:--:|:--:|
-| Figura 3:  Análise tráfego iptables | Figura 4: QoS iptables |
+| Figura 4:  Análise tráfego iptables | Figura 5: QoS iptables |
 
 
 
