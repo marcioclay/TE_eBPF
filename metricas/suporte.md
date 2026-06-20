@@ -11,3 +11,9 @@ sudo docker exec clab-lab-ebpf-gateway ip link show eth1
 ```
 sudo docker exec clab-lab-ebpf-gateway ls -la /sys/fs/bpf/
 ```
+
+3. Lista mapas ativos na memória, com os seus respetivos IDs e nomes:
+
+```
+sudo docker exec clab-lab-ebpf-gateway bpftool map show
+```
