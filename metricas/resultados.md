@@ -71,7 +71,6 @@ Nesta etapa, avaliou-se o volume do ataque injetado na interface do Gateway e o 
 
  |
 
-**Status do Sensor (QoS)** - o status OFFLINE, é intermitente, necessitando observação temporal para sua visualização.
 
 *Nota Técnica: No cenário eBPF, a extração dos contadores do mapa BPF em user-space sofreu dissincronia, contudo, a mitigação efetiva de ~100% é atestada e validada pela drástica queda do uso da CPU e pela integridade da QoS apresentada na Tabela 2.
 
@@ -88,9 +87,24 @@ Esta etapa mede o impacto da mitigação do ponto de vista do dispositivo IoT (S
 | **Latência Média (RTT)** | 899.00 ms | 67.80 ms | 26.20 ms |
 | **Jitter (Variação de Atraso)**| 764.00 ms | 40.10 ms | 5.90 ms |
 
+**Status do Sensor (QoS)** - o status OFFLINE, é intermitente, necessitando observação temporal para sua visualização.
 
 Achados de Qualidade de Serviço:
 O impacto na QoS define de forma categórica a viabilidade técnica da defesa para ambientes IoT. Embora o Iptables evite a queda total do sensor (0% de perda), ele introduz um gargalo inaceitável (Bufferbloat), sacrificando o tempo real ao gerar um Jitter severo de 831.60 ms. A abordagem com eBPF/XDP provou ser a única arquitetura capaz de restaurar a normalidade da rede, mantendo a latência em estado de repouso (31.50 ms) e um Jitter estável, garantindo a resiliência transparente do serviço legítimo.
+
+| ![Imagem 1](https://github.com/user-attachments/assets/74cb21d8-f754-437f-868f-df7ec245b27d) | ![Imagem 2](https://github.com/user-attachments/assets/43330cb6-9592-47c0-97c8-645eaa2f1e49) |
+|:--:|:--:|
+| Figura 1: Análise tráfego xdp | Figura 2: QoS xdp |
+
+| ![Imagem 3](https://github.com/user-attachments/assets/d6534712-4226-472c-8e32-1bb86e0cbd0b) | ![Imagem 4](https://github.com/user-attachments/assets/de87b5c3-5cd2-45a8-9dd6-b509067eafd9) |
+|:--:|:--:|
+| Figura 3:  Análise tráfego iptables | Figura 4: QoS iptables |
+
+
+
+
+
+
 
 ## 4. Conclusão Parcial
 
