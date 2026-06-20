@@ -2,7 +2,6 @@
 import subprocess
 import json
 import time
-import struct
 import sys
 import threading
 import re
@@ -13,7 +12,6 @@ import re
 GATEWAY = "clab-lab-ebpf-gateway"
 SENSOR = "clab-lab-ebpf-sensor"
 IFACE = "eth1"
-MAPA_ESTATISTICAS = "estatisticas_pr"
 
 # Variáveis globais para partilha de dados
 dados_qos = {"rtt": 0.0, "jitter": 0.0, "rtt_anterior": 0.0, "enviados": 0, "perdidos": 0}
@@ -63,28 +61,30 @@ def identificar_cenario():
         
     return "SEM DEFESA"
 
-def buscar_id_mapa(nome_mapa):
+def ler_metricas_xdp_live():
+    """Lê o mapa ativo perguntando ao Kernel e entende o formato 'formatted' do BTF"""
     saida = executar_cmd(f"sudo docker exec {GATEWAY} bpftool map show -j")
-    if saida:
-        try:
-            for mapa in json.loads(saida):
-                if nome_mapa in mapa.get("name", ""):
-                    return mapa.get("id")
-        except: pass
-    return None
-
-def ler_metricas_xdp(id_mapa):
-    saida = executar_cmd(f"sudo docker exec {GATEWAY} bpftool map dump id {id_mapa} -j")
     if not saida: return 0
+    
     try:
-        pacotes = 0
-        for entrada in json.loads(saida):
-            chave = struct.unpack("<I", bytes.fromhex(entrada.get('key', '').replace(" ", "")))[0]
-            if chave == 0: 
-                p, _ = struct.unpack("<QQ", bytes.fromhex(entrada.get('value', '').replace(" ", "")))
-                pacotes = p
-        return pacotes
-    except: return 0
+        mapas = json.loads(saida)
+        ids_validos = [m.get('id') for m in mapas if "estatisticas" in m.get('name', "")]
+        if not ids_validos: return 0
+        
+        mapa_ativo_id = max(ids_validos)
+        dump = executar_cmd(f"sudo docker exec {GATEWAY} bpftool map dump id {mapa_ativo_id} -j")
+        if not dump: return 0
+        
+        for entrada in json.loads(dump):
+            # A MÁGICA ESTÁ AQUI: Procura pelo bloco "formatted" que você descobriu!
+            if "formatted" in entrada:
+                fmt = entrada["formatted"]
+                if fmt.get("key") == 0:
+                    return fmt.get("value", {}).get("total_pacotes", 0)
+    except Exception: 
+        pass
+    
+    return 0
 
 def ler_metricas_iptables():
     saida = executar_cmd(f"sudo docker exec {GATEWAY} iptables -nvL INPUT -x")
@@ -97,7 +97,6 @@ def ler_metricas_iptables():
 # INTERFACE PRINCIPAL
 # ==========================================
 def iniciar_painel():
-    id_estatisticas = buscar_id_mapa(MAPA_ESTATISTICAS)
     estado_anterior = {
         "rx_pkts": int(ler_arquivo_container(GATEWAY, f"/sys/class/net/{IFACE}/statistics/rx_packets") or 0),
         "drop_pkts": 0
@@ -114,18 +113,17 @@ def iniciar_painel():
             pps_recebido = max(0, rx_pkts_atual - estado_anterior["rx_pkts"])
             
             pkts_bloqueados_total = 0
-            if cenario == "eBPF/XDP" and id_estatisticas:
-                pkts_bloqueados_total = ler_metricas_xdp(id_estatisticas)
+            if cenario == "eBPF/XDP":
+                pkts_bloqueados_total = ler_metricas_xdp_live()
             elif cenario == "Iptables":
                 pkts_bloqueados_total = ler_metricas_iptables()
                 
             pps_bloqueado = max(0, pkts_bloqueados_total - estado_anterior["drop_pkts"])
             
-            # Cálculo da Taxa de Mitigação (%)
             taxa_mitigacao = 0.0
             if pps_recebido > 0 and pps_bloqueado > 0:
                 taxa_mitigacao = (pps_bloqueado / pps_recebido) * 100
-                taxa_mitigacao = min(100.0, taxa_mitigacao) # Limita a 100% por questões de arredondamento
+                taxa_mitigacao = min(100.0, taxa_mitigacao)
 
             taxa_perda = (dados_qos["perdidos"] / dados_qos["enviados"]) * 100 if dados_qos["enviados"] > 0 else 0.0
             estado_sensor = "ONLINE" if dados_qos["rtt"] > 0 else "OFFLINE / TIMEOUT"
