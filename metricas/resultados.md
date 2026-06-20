@@ -41,9 +41,9 @@ A primeira parte simula tráfego legítmo a segunda com borda vermelha tráfego 
 
 <img width="579" height="338" alt="image" src="https://github.com/user-attachments/assets/95478197-4b49-4c49-8de8-88b1874de72c" />
 
-| ![Imagem 1](https://github.com/user-attachments/assets/95478197-4b49-4c49-8de8-88b1874de72c) | ![Imagem 2](https://github.com/user-attachments/assets/43330cb6-9592-47c0-97c8-645eaa2f1e49) |
-|:--:|:--:|
-| Figura 1: Tráfego legítimo x anômalo| Figura 2: QoS xdp |
+| ![Imagem 1](https://github.com/user-attachments/assets/95478197-4b49-4c49-8de8-88b1874de72c) |
+|:--:|
+| Figura 1: Tráfego legítimo x anômalo |
 ---
 
 ## 2. Metodologia e Cenários de Teste
