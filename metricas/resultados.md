@@ -41,6 +41,9 @@ A primeira parte simula tráfego legítmo a segunda com borda vermelha tráfego 
 
 <img width="579" height="338" alt="image" src="https://github.com/user-attachments/assets/95478197-4b49-4c49-8de8-88b1874de72c" />
 
+| ![Imagem 1](https://github.com/user-attachments/assets/95478197-4b49-4c49-8de8-88b1874de72c) | ![Imagem 2](https://github.com/user-attachments/assets/43330cb6-9592-47c0-97c8-645eaa2f1e49) |
+|:--:|:--:|
+| Figura 1: Tráfego legítimo x anômalo| Figura 2: QoS xdp |
 ---
 
 ## 2. Metodologia e Cenários de Teste
@@ -91,6 +94,11 @@ Esta etapa mede o impacto da mitigação do ponto de vista do dispositivo IoT (S
 
 Achados de Qualidade de Serviço:
 O impacto na QoS define de forma categórica a viabilidade técnica da defesa para ambientes IoT. Embora o Iptables evite a queda total do sensor (0% de perda), ele introduz um gargalo inaceitável (Bufferbloat), sacrificando o tempo real ao gerar um Jitter severo de 831.60 ms. A abordagem com eBPF/XDP provou ser a única arquitetura capaz de restaurar a normalidade da rede, mantendo a latência em estado de repouso (31.50 ms) e um Jitter estável, garantindo a resiliência transparente do serviço legítimo.
+
+--- 
+
+As figuras apresentam os resultados dos testes do protótipo de mitigação DDoS. As duas primeiras mostram a análise de tráfego e a qualidade de serviço com XDP/eBPF, evidenciando a eficiência da filtragem no kernel. As duas últimas ilustram o mesmo cenário com iptables, destacando a diferença de desempenho e impacto sobre o tráfego legítimo.
+
 
 | ![Imagem 1](https://github.com/user-attachments/assets/74cb21d8-f754-437f-868f-df7ec245b27d) | ![Imagem 2](https://github.com/user-attachments/assets/43330cb6-9592-47c0-97c8-645eaa2f1e49) |
 |:--:|:--:|
