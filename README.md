@@ -75,8 +75,8 @@ A topologia do laboratório foi desenhada para representar um ambiente de Gatewa
 
 A rede é composta por três componentes principais:
 
-- Gateway: alvo da defesa, onde reside o filtro eBPF/XDP. Configurado para interceptar todo o tráfego que transita entre a rede.
-- Sensor: Simula o dispositivo IoT legítimo que realiza a telemetria, utilizando um perfil de rede com latência e perda (via tc qdisc) para emular condições reais de conexão Wi-Fi.
+- Gateway: alvo da defesa, onde reside o filtro eBPF/XDP. Configurado para interceptar todo o tráfego que transita entre a rede. O gateway simulaum raspberry com 3G e 1 CPU>
+- Sensor: Simula o dispositivo IoT legítimo que realiza a telemetria, utilizando um perfil de rede com latência e perda (via tc qdisc) para emular condições reais de conexão Wi-Fi. O sensor possui 512Mb de RAM e 1 CPU.
 - Atacante: gerador de tráfego anômalo - técnica de IP Spoofing (--rand-source) para simular uma botnet distribuída.
 
 ---
