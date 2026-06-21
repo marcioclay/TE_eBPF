@@ -16,8 +16,7 @@ Um tráfego legítimo de um sensor IoT para um gateway se caracteriza por baixo 
 | **Origem**         | IP fixo do sensor                          | IPs aleatórios (spoofing) |
 | **Payload**        | Dados estruturados (JSON, valores numéricos)| Conteúdo aleatório ou vazio |
 
-
-Abaixo imagem de captura de trafego legitimo e anomalo, usando tcdump e wireshark. As imagens foram obtidas através de simulação de tráfego sensor -> gateway e atacante -> gateway.
+Os comandos abaixo foram usados para gerar tráfego legítimo e anômalo entre sensor e gateway.
 
 ```
 # comados para simular trafego legitimo e anomalo
@@ -36,8 +35,11 @@ Observação:
 * Coluna Time: tráfego legítimo - cadência ritimada / tráfego anômalo - dezenas, centenas pacotes com a mesma marca
 * Coluna lenght: tráfego legítimo - tamanho fixo / tráfego anômalo - udp porta 1883
 
+
 #### Tráfego anômalo e legítimo
 A primeira parte simula tráfego legítmo a segunda com borda vermelha tráfego anômalo.
+
+Abaixo imagem de captura de trafego legitimo e anomalo, usando tcdump e wireshark. As imagens foram obtidas através de simulação de tráfego sensor -> gateway e atacante -> gateway.
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/95478197-4b49-4c49-8de8-88b1874de72c" width="450" height="300" />
