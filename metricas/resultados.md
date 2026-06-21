@@ -79,9 +79,7 @@ Nesta etapa, avaliou-se o volume do ataque injetado na interface do Gateway e o 
  |
 
 
-*Nota Técnica: No cenário eBPF, a extração dos contadores do mapa BPF em user-space sofreu dissincronia, contudo, a mitigação efetiva de ~100% é atestada e validada pela drástica queda do uso da CPU e pela integridade da QoS apresentada na Tabela 2.
-
-Achados do Tráfego e Hardware: A análise comprova a ineficiência de firewalls tradicionais sob ataques volumétricos. O Iptables, ao operar em camadas superiores do Kernel, mantém a CPU à beira da exaustão (88.0%) apenas para descartar pacotes. Em contraste, o eBPF/XDP implementou com sucesso o conceito de degradação graciosa: ao descartar antecipadamente o ataque no driver da placa de rede, reduziu o estresse do processador para 29.7%, mesmo submetido a uma carga maliciosa quase duas vezes maior.
+Tráfego e Hardware: Os testes mostraram que tanto xdp, quanto o iptables conseguem mitigar ataques DDoS, porém percebeu-se que a carga do hardware como cpu foi menor do que o iptables, que em alguns momentos chegou a 95%. O xdp teve uma taxa de drop de pacotes de forma superior o que facilitou a manutenção do sistema. Ambas as tecnologias são eficientes, mas o drop a nível de kernel do xdp possibilita menor exaustão da cpu.
 
 
 ### 3.2. Análise de Qualidade de Serviço (QoS) e Disponibilidade
@@ -97,7 +95,7 @@ Esta etapa mede o impacto da mitigação do ponto de vista do dispositivo IoT (S
 **Status do Sensor (QoS)** - o status OFFLINE, é intermitente, necessitando observação temporal para sua visualização.
 
 Achados de Qualidade de Serviço:
-O impacto na QoS define de forma categórica a viabilidade técnica da defesa para ambientes IoT. Embora o Iptables evite a queda total do sensor (0% de perda), ele introduz um gargalo inaceitável (Bufferbloat), sacrificando o tempo real ao gerar um Jitter severo de 831.60 ms. A abordagem com eBPF/XDP provou ser a única arquitetura capaz de restaurar a normalidade da rede, mantendo a latência em estado de repouso (31.50 ms) e um Jitter estável, garantindo a resiliência transparente do serviço legítimo.
+O impacto na QoS define de forma categórica a viabilidade técnica da defesa para ambientes IoT. Embora o Iptables evite a queda total do sensor (0% de perda), ele introduz um gargalo, sacrificando o tempo real ao gerar um Jitter severo de 831.60 ms. A abordagem com eBPF/XDP demonstra ser uma arquitetura capaz de restaurar a normalidade da rede, mantendo a latência em estado de repouso (31.50 ms) e um Jitter estável, garantindo o serviço legítimo.
 
 --- 
 
@@ -114,10 +112,6 @@ As figuras apresentam os resultados dos testes do protótipo de mitigação DDoS
 
 
 
-
-
-
-
 ## 4. Conclusão Parcial
 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Os teste foram realizados para simular uma ataque DDoS com simulação de spoofing. Os testes demonstram uma ganho do eBPF/xdp ao iptables, a diferença se mostra no uso da cpu que foi quase a 100% no iptables. Cada teste foi realizado no periodo de 30s, e sugere-se continuar a avaliação, aumentando o numero de sensores atacantes e inserindo o broker MQTT em um container separado.
