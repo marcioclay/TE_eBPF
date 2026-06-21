@@ -29,6 +29,17 @@ As métricas em análise no laboratório dividem-se em duas categorias principai
 - Perda de Pacotes Legítimos (%)
 - Latência Média (RTT - Round-Trip Time)
 - Jitter (Variação de Atraso)
+--- 
+
+### Tecnologias usadas para os testes 
+
+- xdp_monitor.c : Código eBPF/XDP que atua no driver da rede. Inspeciona e descarta pacotes maliciosos antes de consumirem memória, registando as estatísticas de bloqueio no Kernel.
+
+- dashboard.py: Script Python que lê os dados do Kernel em tempo real e emite pings contínuos para calcular a Qualidade de Serviço (QoS) da rede IoT (Latência e Jitter).
+
+- hping3 : Ferramenta geradora de tráfego, utilizada para simular o ataque de exaustão (DDoS UDP Flood) com IPs falsificados (IP Spoofing).
+
+- htop : Monitor de sistema executado no Host. Serve como prova material do esgotamento da CPU (SoftIRQ) sem defesa e da poupança de processamento quando o XDP está ativo.
 
 
 ---
