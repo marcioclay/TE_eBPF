@@ -29,7 +29,6 @@ As métricas em análise no laboratório dividem-se em duas categorias principai
 - Perda de Pacotes Legítimos (%)
 - Latência Média (RTT - Round-Trip Time)
 - Jitter (Variação de Atraso)
---- 
 
 
 ---
