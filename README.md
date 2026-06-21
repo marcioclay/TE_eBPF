@@ -27,7 +27,7 @@
 
 ---
 
-"A mitigação de ataques DDoS baseada em XDP é superior à mitigação baseada em iptables em cenários de IP Spoofing, uma vez que mantém o desempenho constante independentemente da cardinalidade de IPs falsificados, enquanto a abordagem tradiconal, iptables sofre degradação devido à exaustão da tabela de estados do kernel."
+"A mitigação de ataques DDoS baseada em XDP é superior à mitigação baseada em iptables em cenários de IP Spoofing, uma vez que mantém o desempenho constante independentemente de IPs falsificados, enquanto a abordagem tradiconal, iptables sofre degradação devido à exaustão do ataque."
 
 ---
 
@@ -103,13 +103,13 @@ sudo usermod -aG docker $USER
 
 ### 2. Instalar o Containerlab
 
-```bash
+```
 bash -c "$(curl -sL https://get.containerlab.dev)"
 ```
 
 Verifique a instalação:
 
-```bash
+```
 containerlab version
 ```
 
@@ -200,8 +200,7 @@ docker exec clab-lab-ebpf-sensor ping -c 3 10.0.0.1
 
 ### 7. Executar script 
 
-- instala python
-- instala MQTT
+Instala as bibliotecas necessárias para o painel de visualização e configure o broker MQTT no Gateway:
 
   ```
   chmod +x ./scripts/setup.sh
@@ -217,27 +216,6 @@ chmod +x scripts/load_xdp.sh
 ./scripts/load_xdp.sh xdp
 ```
 --- 
-
-📊 Mapas - atalho
-
-```
-# Listar os mapas
-sudo docker exec -it clab-lab-ebpf-gateway bpftool map show
-
-# Para ver as estatísticas de tráfego (UDP vs TCP):
-bpftool map dump pinned /sys/fs/bpf/estatisticas
-# Para ver a quantidade de IPs únicos (spoofed) bloqueados:
-sudo docker exec -it clab-lab-ebpf-gateway bpftool map dump id 12
-```
-
-
-### 🧹 Limpeza
-
-Para destruir o laboratório e remover todos os containers:
-
-```
-sudo containerlab destroy -t topologia.yml
-```
 
 
 
@@ -270,6 +248,10 @@ TE_eBPF/
 - [libbpf GitHub](https://github.com/libbpf/libbpf)
 - [nicolaka/netshoot — Container de diagnóstico de rede](https://github.com/nicolaka/netshoot)
 - [Tutorial de artigo ataque slow](https://github.com/gianluca2414/MQTT_SlowITe )
+- [1] A. Tolay, *eBPF-Based Real-Time DDoS Mitigation for IoT Edge Devices*, Jul. 13, 2025. doi: 10.48550/arXiv.2508.00851
+- [2] C. K. Dominicini, *Redes Programáveis com XDP/eBPF*, AVA da disciplina Redes Programáveis – TE em Redes I, Vila Velha, 2026.
+
+
 
 
 
