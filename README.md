@@ -1,6 +1,6 @@
 ## 🐝 Protótipo de topologia com XDP/eBPF orquestrado por Containerlab
 
-> Protótipo de **deteção de pacotes em um Gateway** usando **eBPF/XDP** em ambiente de rede virtualizado com **Containerlab**.
+> Protótipo de e deteção e mitigação usando **eBPF/XDP** em ambiente de rede virtualizado com **Containerlab**.
 
 [![Containerlab](https://img.shields.io/badge/Containerlab-v0.50+-blue?logo=linux)](https://containerlab.dev)
 [![Docker](https://img.shields.io/badge/Docker-required-blue?logo=docker)](https://www.docker.com)
@@ -17,11 +17,13 @@
 
 ## O que este protótipo demonstra:
 
-- Mitigação em Nível de Driver.
-- Eficiência Computacional: Processamento de tráfego com uso mínimo de CPU, validando a arquitetura eBPF em relação a firewalls(iptables).
-- Análise Comparativa de Desempenho: Orquestração de cenários de teste para avaliar a resiliência do Gateway sob condições de rede instáveis (latência/perda simuladas via tc qdisc).
-- Monitoramento Estatístico via eBPF Maps: Uso de mapas do tipo ARRAY para contagem de pacotes e banda e mínima latência de observabilidade.
-- Seletividade de Filtro: Implementação de regras baseadas em protocolos e portas (UDP/1883) para garantir a proteção contra ataques sem comprometer o tráfego MQTT legítimo.
+**O que este protótipo demonstra:**
+
+* **Mitigação em Nível de Driver:** Descarte de pacotes antes da alocação de memória pelo sistema operativo (sk_buff).
+* **Eficiência Computacional:** Processamento de tráfego com uso mínimo de CPU, validando a arquitetura eBPF em relação a firewalls(iptables).
+* **Análise Comparativa de Desempenho:** Avaliação da resiliência do Gateway sob inundações volumétricas.
+* **Monitoramento Estatístico via eBPF Maps:** Uso de mapas do tipo ARRAY para contagem de pacotes e banda e mínima latência de observabilidade.
+* **Seletividade de Filtro:** Implementação de regras para garantir a proteção contra ataques UDP flood sem comprometer o tráfego MQTT (TCP/1883) legítimo da infraestrutura IoT.
 
 ---
 
@@ -223,8 +225,7 @@ chmod +x scripts/load_xdp.sh
 sudo docker exec -it clab-lab-ebpf-gateway bpftool map show
 
 # Para ver as estatísticas de tráfego (UDP vs TCP):
-sudo docker exec -it clab-lab-ebpf-gateway bpftool map dump id 11
-
+bpftool map dump pinned /sys/fs/bpf/estatisticas
 # Para ver a quantidade de IPs únicos (spoofed) bloqueados:
 sudo docker exec -it clab-lab-ebpf-gateway bpftool map dump id 12
 ```
