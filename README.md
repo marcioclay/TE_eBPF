@@ -223,18 +223,16 @@ chmod +x scripts/load_xdp.sh
 
 ```
 TE_eBPF/
-├── topology.yaml       # Configuração do laboratório (Containerlab)
-├── src/
-│   └── xdp_monitor.c   # Código eBPF otimizado (DDoS + IP Spoofing)
+├── topologia.yml       # Configuração do laboratório (Containerlab)
+├── xdp_monitor.c       # Código eBPF otimizado (DDoS + IP Spoofing)
 ├── scripts/
-│   ├── compile.sh      # Compila o xdp_monitor.c
-│   ├── setup.sh        # Configura rede (tc qdisc)
-│   ├── load_xdp.sh     # Ativa o XDP no Gateway
-│   └── start_broker.sh # Inicia o Mosquitto (MQTT)
+│   ├── compile.sh      # Compila o xdp_monitor.c usando container
+│   ├── setup.sh        # Configura dependências e rede
+│   └── load_xdp.sh     # Ativa/Limpa o XDP no Gateway
 ├── dash/
-│   └── dashboard.py    # Dashboard com PPS e IPs Únicos
+│   └── dashboard.py    # Dashboard Analítico (PPS, Jitter, Drops)
 └── metricas/
-    └── xdp_dos.md      # Roteiro de testes (Passo a passo)
+    └── xdp_dos.md      # Roteiro de testes detalhados
 
 ```
 
