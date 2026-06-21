@@ -3,6 +3,43 @@
 
 Este documento detalha a metodologia, a caracterização de rede e a análise dos resultados obtidos durante os testes de mitigação de ataques DDoS (Distributed Denial of Service) em um ambiente de Gateway IoT. O estudo compara a eficiência de abordagens tradicionais de firewall (Iptables) contra o processamento de pacotes em nível de kernel (eBPF/XDP).
 
+
+### Tecnologias usadas para os testes 
+
+- xdp_monitor.c : Código eBPF/XDP que atua no driver da rede. Inspeciona e descarta pacotes maliciosos antes de consumirem memória, registando as estatísticas de bloqueio no Kernel.
+
+- dashboard.py: Script Python que lê os dados do Kernel em tempo real e emite pings contínuos para calcular a Qualidade de Serviço (QoS) da rede IoT (Latência e Jitter).
+
+- hping3 : Ferramenta geradora de tráfego, utilizada para simular o ataque de exaustão (DDoS UDP Flood) com IPs falsificados (IP Spoofing).
+
+- htop : Monitor de sistema executado no Host. Serve como prova material do esgotamento da CPU (SoftIRQ) sem defesa e da poupança de processamento quando o XDP está ativo.
+---
+🗂 Mapas xdp
+
+Mapa estatísticas
+
+- Tipo: BPF_MAP_TYPE_ARRAY (array fixo, acesso imediato).
+
+- Capacidade: 2 posições.
+
+- Índice 0: carga bloqueada.
+
+- Valor: estrutura metricas_host (total de pacotes + total de bytes).
+
+- Papel: fornece os dados brutos para calcular PPS e taxa de mitigação no dashboard.
+
+Mapa ips_detectados
+
+- Tipo: BPF_MAP_TYPE_HASH (hash table para IPs não sequenciais).
+
+- Capacidade: até 8192 IPs únicos.
+
+- Chave: endereço IP de origem malicioso (__u32).
+
+- Valor: contador (__u64).
+
+- Papel: rastrear e bloquear milhares de IPs falsificados (spoofing), mostrando eficiência superior ao iptables em consumo de memória.
+  
 ---
 
 ## 1. Caracterização e Diferenciação de Tráfego legítimo e anômalo
