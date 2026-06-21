@@ -16,7 +16,7 @@ struct {
     __uint(max_entries, 2); 
     __type(key, __u32);
     __type(value, struct metricas_host);
-} estatisticas_protocolo SEC(".maps");
+} estatisticas SEC(".maps");
 
 // Mapa 2: Rastreamento de IPs únicos 
 struct {
@@ -49,7 +49,7 @@ int programa_monitor_xdp(struct xdp_md *ctx) {
         
         // pacotes bloqueados
         chave_estatistica = 0;
-        struct metricas_host *metricas = bpf_map_lookup_elem(&estatisticas_protocolo, &chave_estatistica);
+        struct metricas_host *metricas = bpf_map_lookup_elem(&estatisticas, &chave_estatistica);
         if (metricas) {
             __sync_fetch_and_add(&metricas->total_pacotes, 1);
             __sync_fetch_and_add(&metricas->total_bytes, tamanho_pacote);
