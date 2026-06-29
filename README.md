@@ -1,4 +1,4 @@
-## 🐝 Protótipo de topologia com XDP/eBPF orquestrado por Containerlab
+## 🐝 Protótipo de topologia com XDP/eBPF orquestrado por Containerlab para verificação de restrições com autômatos em conexões MQTT
 
 > Protótipo de e deteção e mitigação usando **eBPF/XDP** em ambiente de rede virtualizado com **Containerlab**.
 
@@ -7,7 +7,10 @@
 [![eBPF](https://img.shields.io/badge/eBPF-XDP-orange)](https://ebpf.io)
 [![Licença](https://img.shields.io/badge/licença-GPL--2.0-green)](LICENSE)
 [![Linguagem](https://img.shields.io/badge/linguagem-C-blue)](https://en.wikipedia.org/wiki/C_(programming_language))
-[![OS](https://img.shields.io/badge/OS-Ubuntu-orange)](https://ubuntu.com/)
+[![Automato](https://img.shields.io/badge/Automato-Finite_Automaton-%23777777)](https://github.com/marcioclay/teocomp_Automato)
+
+
+
 
 
 ---
