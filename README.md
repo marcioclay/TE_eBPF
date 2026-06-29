@@ -1,4 +1,4 @@
-## 🐝 Protótipo de topologia com XDP/eBPF orquestrado por Containerlab para mitigar tráfego anômalo em conexões MQTT com automatos determnissticos.
+## 🐝 Protótipo de topologia com XDP/eBPF orquestrado por Containerlab para detectar e mitigar ataque DoS com spoofing.
 
 > Protótipo de e deteção e mitigação usando **eBPF/XDP** em ambiente de rede virtualizado com **Containerlab**.
 
